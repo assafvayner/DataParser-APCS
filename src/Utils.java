@@ -57,9 +57,8 @@ public class Utils {
     }
 
     private static String removeBadChars(String l) {
-        int indexPercent = l.indexOf("%");
-        if(indexPercent != -1){
-            l = l.substring(0, indexPercent) + l.substring(indexPercent + 1);
+        if(l.contains("%")){
+            l = l.replace("%","");
         }
 
         int index1 = l.indexOf("\"");
