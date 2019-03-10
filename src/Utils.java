@@ -46,28 +46,28 @@ public class Utils {
         String auxStr;
         String[] lineArr;
         for (int i = 5; i < unemploymentDataLines.length; i++) {
-            auxStr = removeBadCharsUnemploymentResults(unemploymentDataLines[i]);//make method
+            auxStr = removeBadChars(unemploymentDataLines[i]);//make method
             lineArr = auxStr.split(",");
 
             String state_abbr = lineArr[1];
 
-            if (!data.contains(state_abbr)) {
-                data.add(new State(state_abbr));
+            if (data.contains(state_abbr)) {
+
+
+                String county_name = lineArr[2];
+                county_name = county_name.substring(0, county_name.length() - 3);
+
+                if (data.getStateByName(state_abbr).contains(county_name)) {
+
+
+                    int totalLaborForce = 0;
+                    int employedLaborForce = 0;
+                    int unemployedLabotForce = 0;
+                    double unemployedPercent = 0;
+
+                    data.getStateByName(state_abbr).getCountyByName(county_name).add(new Employment2016(totalLaborForce, employedLaborForce, unemployedLabotForce, unemployedPercent));
+                }
             }
-
-            String county_name = lineArr[2];
-
-            if (!data.getStateByName(state_abbr).contains(county_name)) {
-                data.getStateByName(state_abbr).add(new County(county_name, Integer.parseInt(lineArr[0])));
-            }
-
-
-            int totalLaborForce = 0;
-            int employedLaborForce = 0;
-            int unemployedLabotForce = 0;
-            double unemployedPercent = 0;
-
-            data.getStateByName(state_abbr).getCountyByName(county_name).add(new Employment2016(totalLaborForce,employedLaborForce,unemployedLabotForce,unemployedPercent));
         }
     }
 
@@ -75,39 +75,45 @@ public class Utils {
         String auxStr;
         String[] lineArr;
         for (int i = 5; i < educationDataLines.length; i++) {
-            auxStr = removeBadCharsEducationResults(educationDataLines[i]);//make method
+            auxStr = removeBadChars(educationDataLines[i]);//make method
             lineArr = auxStr.split(",");
 
             String state_abbr = lineArr[1];
 
-            if (!data.contains(state_abbr)) {
-                data.add(new State(state_abbr));
+            if (data.contains(state_abbr)) {
+                String county_name = lineArr[2];
+
+                if (data.getStateByName(state_abbr).contains(county_name)) {
+                    double noHighSchool = 0;
+                    double onlyHighSchool = 0;
+                    double someCollege = 0;
+                    double bachelorsOrMore = 0;
+
+                    data.getStateByName(state_abbr).getCountyByName(county_name).add(new Education2016(noHighSchool, onlyHighSchool, someCollege, bachelorsOrMore));
+                }
             }
-
-            String county_name = lineArr[2];
-
-            if (!data.getStateByName(state_abbr).contains(county_name)) {
-                data.getStateByName(state_abbr).add(new County(county_name, Integer.parseInt(lineArr[0])));
-            }
-
-            double noHighSchool = 0;
-            double onlyHighSchool = 0;
-            double someCollege = 0;
-            double bachelorsOrMore = 0;
-
-            data.getStateByName(state_abbr).getCountyByName(county_name).add(new Education2016(noHighSchool, onlyHighSchool, someCollege, bachelorsOrMore));
         }
     }
 
-    private static String removeBadCharsEducationResults(String line) {
-        return null;
+    private static String removeBadChars(String line) {
+        if (line.contains("%")) {
+            line = line.replace("%", "");
+        }
+
+        while(line.contains("\"")) {
+            int index1 = line.indexOf("\"");
+            int index2 = line.indexOf("\"", index1 + 1);
+            String noMiddleCommas = line.substring(index1 + 1, index2).replace(",", "");
+            line = line.substring(0, index1) + noMiddleCommas + line.substring(index2 + 1);
+        }
+        return line;
     }
 
     private static void initializeCountiesAndInsertElectionData(Data data, String[] electionDataLines) {
         String auxStr;
         String[] lineArr;
         for (int i = 1; i < electionDataLines.length; i++) {
-            auxStr = removeBadCharsElectionResults(electionDataLines[i]);
+            auxStr = removeBadChars(electionDataLines[i]);
             lineArr = auxStr.split(",");
 
             String state_abbr = lineArr[8];
@@ -127,7 +133,6 @@ public class Utils {
         }
     }
 
-
     public static ArrayList<ElectionResult> parse2016PresidentialResults() {
         ArrayList<ElectionResult> results = new ArrayList<>();
 
@@ -138,7 +143,7 @@ public class Utils {
         String auxStr;
         String[] lineArr;
         for (int i = 1; i < lines.length; i++) {
-            auxStr = removeBadCharsElectionResults(lines[i]);
+            auxStr = removeBadChars(lines[i]);
             lineArr = auxStr.split(",");
             results.add(makeElectionResultObj(lineArr));
         }
@@ -160,26 +165,6 @@ public class Utils {
 
         return new ElectionResult(votes_dem, votes_gop, total_votes, per_dem, per_gop,
                 diff, per_point_diff, state_abbr, county_name, combined_fips);
-    }
-
-    private static String removeBadCharsElectionResults(String l) {
-        if (l.contains("%")) {
-            l = l.replace("%", "");
-        }
-
-        int index1 = l.indexOf("\"");
-        if (index1 == -1) {
-            return l;
-        }
-        int index2 = l.indexOf("\"", index1 + 1);
-        String noMiddleCommas = l.substring(index1 + 1, index2).replace(",", "");
-
-        return l.substring(0, index1) + noMiddleCommas + l.substring(index2 + 1);
-    }
-
-
-    private static String removeBadCharsUnemploymentResults(String unemploymentDataLine) {
-        return null;
     }
 
 }
