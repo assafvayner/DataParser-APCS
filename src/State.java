@@ -42,4 +42,13 @@ public class State {
         }
         return null;
     }
+
+    public boolean contains(String countyName){
+        for (int i = 0; i < this.counties.size(); i++) {
+            if (this.counties.get(i).getName().equals(countyName)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

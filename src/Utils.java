@@ -21,7 +21,7 @@ public class Utils {
         return output.toString();
     }
 
-    public static Data parseAllData(){
+    public static Data parseAllData() {
         Data data = new Data();
 
         String electionData = readFileAsString("data/2016_Presidential_Results.csv");
@@ -30,10 +30,77 @@ public class Utils {
         initializeCountiesAndInsertElectionData(data, electionDataLines);
 
         String educationData = readFileAsString("data/Education.csv");
-        String unemploymentData = readFileAsString("data/Unemployment.csv");
+        String[] educationDataLines = educationData.split("\n");
 
+        InsertEducationData(data, educationDataLines);
+
+        String unemploymentData = readFileAsString("data/Unemployment.csv");
+        String[] unemploymentDataLines = unemploymentData.split("\n");
+
+        InsertUnemploymentData(data, unemploymentDataLines);
 
         return data;
+    }
+
+    private static void InsertUnemploymentData(Data data, String[] unemploymentDataLines) {
+        String auxStr;
+        String[] lineArr;
+        for (int i = 5; i < unemploymentDataLines.length; i++) {
+            auxStr = removeBadCharsUnemploymentResults(unemploymentDataLines[i]);//make method
+            lineArr = auxStr.split(",");
+
+            String state_abbr = lineArr[1];
+
+            if (!data.contains(state_abbr)) {
+                data.add(new State(state_abbr));
+            }
+
+            String county_name = lineArr[2];
+
+            if (!data.getStateByName(state_abbr).contains(county_name)) {
+                data.getStateByName(state_abbr).add(new County(county_name, Integer.parseInt(lineArr[0])));
+            }
+
+
+            int totalLaborForce = 0;
+            int employedLaborForce = 0;
+            int unemployedLabotForce = 0;
+            double unemployedPercent = 0;
+
+            data.getStateByName(state_abbr).getCountyByName(county_name).add(new Employment2016(totalLaborForce,employedLaborForce,unemployedLabotForce,unemployedPercent));
+        }
+    }
+
+    private static void InsertEducationData(Data data, String[] educationDataLines) {
+        String auxStr;
+        String[] lineArr;
+        for (int i = 5; i < educationDataLines.length; i++) {
+            auxStr = removeBadCharsEducationResults(educationDataLines[i]);//make method
+            lineArr = auxStr.split(",");
+
+            String state_abbr = lineArr[1];
+
+            if (!data.contains(state_abbr)) {
+                data.add(new State(state_abbr));
+            }
+
+            String county_name = lineArr[2];
+
+            if (!data.getStateByName(state_abbr).contains(county_name)) {
+                data.getStateByName(state_abbr).add(new County(county_name, Integer.parseInt(lineArr[0])));
+            }
+
+            double noHighSchool = 0;
+            double onlyHighSchool = 0;
+            double someCollege = 0;
+            double bachelorsOrMore = 0;
+
+            data.getStateByName(state_abbr).getCountyByName(county_name).add(new Education2016(noHighSchool, onlyHighSchool, someCollege, bachelorsOrMore));
+        }
+    }
+
+    private static String removeBadCharsEducationResults(String line) {
+        return null;
     }
 
     private static void initializeCountiesAndInsertElectionData(Data data, String[] electionDataLines) {
@@ -45,23 +112,23 @@ public class Utils {
 
             String state_abbr = lineArr[8];
 
-            if(!data.contains(state_abbr)){
+            if (!data.contains(state_abbr)) {
                 data.add(new State(state_abbr));
             }
 
             String county_name = lineArr[9];
             int combined_fips = Integer.parseInt(lineArr[10]);
-            int votes_dem = (int)Double.parseDouble(lineArr[1]);
-            int votes_gop = (int)Double.parseDouble(lineArr[2]);
-            int total_votes = (int)Double.parseDouble(lineArr[3]);
+            int votes_dem = (int) Double.parseDouble(lineArr[1]);
+            int votes_gop = (int) Double.parseDouble(lineArr[2]);
+            int total_votes = (int) Double.parseDouble(lineArr[3]);
 
             data.getStateByName(state_abbr).add(new County(county_name, combined_fips));
-            data.getStateByName(state_abbr).getCountyByName(county_name).add(new Election2016(votes_dem,votes_gop, total_votes));
+            data.getStateByName(state_abbr).getCountyByName(county_name).add(new Election2016(votes_dem, votes_gop, total_votes));
         }
     }
 
 
-    public static ArrayList<ElectionResult> parse2016PresidentialResults(){
+    public static ArrayList<ElectionResult> parse2016PresidentialResults() {
         ArrayList<ElectionResult> results = new ArrayList<>();
 
         String dataFromCSV = readFileAsString("data/2016_Presidential_Results.csv");
@@ -74,39 +141,45 @@ public class Utils {
             auxStr = removeBadCharsElectionResults(lines[i]);
             lineArr = auxStr.split(",");
             results.add(makeElectionResultObj(lineArr));
-            }
+        }
         return results;
     }
 
     private static ElectionResult makeElectionResultObj(String[] lineArr) {
-        int votes_dem = (int)Double.parseDouble(lineArr[1]);
-        int votes_gop = (int)Double.parseDouble(lineArr[2]);
-        int total_votes = (int)Double.parseDouble(lineArr[3]);
+        int votes_dem = (int) Double.parseDouble(lineArr[1]);
+        int votes_gop = (int) Double.parseDouble(lineArr[2]);
+        int total_votes = (int) Double.parseDouble(lineArr[3]);
         double per_dem = Double.parseDouble(lineArr[4]) / 100;
         double per_gop = Double.parseDouble(lineArr[5]) / 100;
         int diff = Integer.parseInt(lineArr[6]);
-        double per_point_diff = Double.parseDouble(lineArr[7]) / 100;;
+        double per_point_diff = Double.parseDouble(lineArr[7]) / 100;
+        ;
         String state_abbr = lineArr[8];
         String county_name = lineArr[9];
         int combined_fips = Integer.parseInt(lineArr[10]);
 
         return new ElectionResult(votes_dem, votes_gop, total_votes, per_dem, per_gop,
-                diff, per_point_diff, state_abbr,county_name,combined_fips);
+                diff, per_point_diff, state_abbr, county_name, combined_fips);
     }
 
     private static String removeBadCharsElectionResults(String l) {
-        if(l.contains("%")){
-            l = l.replace("%","");
+        if (l.contains("%")) {
+            l = l.replace("%", "");
         }
 
         int index1 = l.indexOf("\"");
-        if(index1 == -1){
+        if (index1 == -1) {
             return l;
         }
         int index2 = l.indexOf("\"", index1 + 1);
         String noMiddleCommas = l.substring(index1 + 1, index2).replace(",", "");
 
         return l.substring(0, index1) + noMiddleCommas + l.substring(index2 + 1);
+    }
+
+
+    private static String removeBadCharsUnemploymentResults(String unemploymentDataLine) {
+        return null;
     }
 
 }

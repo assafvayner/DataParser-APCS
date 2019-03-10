@@ -3,6 +3,8 @@ public class Employment2016 {
     private int totalLaborForce;
     private int employedLaborForce;
     private int unemployedLabotForce;
+    private double unemployedPercent;
+
 
     public int getTotalLaborForce() {
         return totalLaborForce;
@@ -44,6 +46,5 @@ public class Employment2016 {
         this.unemployedPercent = unemployedPercent;
     }
 
-    private double unemployedPercent;
 
 }
