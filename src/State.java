@@ -16,6 +16,7 @@ public class State {
 
     public State(String name) {
         this.name = name;
+        this.counties = new ArrayList<>();
     }
 
     public String getName() {

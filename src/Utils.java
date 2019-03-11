@@ -59,13 +59,13 @@ public class Utils {
 
                 if (data.getStateByName(state_abbr).contains(county_name)) {
 
+                    int employedLaborForce = Integer.parseInt(lineArr[44]);
+                    int unemployedLabotForce = Integer.parseInt(lineArr[44]);
+                    double unemployedPercent = Double.parseDouble(lineArr[46]);
+                    int totalLaborForce = employedLaborForce + unemployedLabotForce;
 
-                    int totalLaborForce = 0;
-                    int employedLaborForce = 0;
-                    int unemployedLabotForce = 0;
-                    double unemployedPercent = 0;
 
-                    data.getStateByName(state_abbr).getCountyByName(county_name).add(new Employment2016(totalLaborForce, employedLaborForce, unemployedLabotForce, unemployedPercent));
+                    data.getStateByName(state_abbr).getCountyByName(county_name).setEmploy2016(new Employment2016(totalLaborForce, employedLaborForce, unemployedLabotForce, unemployedPercent));
                 }
             }
         }
@@ -84,12 +84,12 @@ public class Utils {
                 String county_name = lineArr[2];
 
                 if (data.getStateByName(state_abbr).contains(county_name)) {
-                    double noHighSchool = 0;
-                    double onlyHighSchool = 0;
-                    double someCollege = 0;
-                    double bachelorsOrMore = 0;
+                    double noHighSchool = Double.parseDouble(lineArr[38]);
+                    double onlyHighSchool = Double.parseDouble(lineArr[39]);
+                    double someCollege = Double.parseDouble(lineArr[40]);
+                    double bachelorsOrMore = Double.parseDouble(lineArr[41]);
 
-                    data.getStateByName(state_abbr).getCountyByName(county_name).add(new Education2016(noHighSchool, onlyHighSchool, someCollege, bachelorsOrMore));
+                    data.getStateByName(state_abbr).getCountyByName(county_name).setEduc2016(new Education2016(noHighSchool, onlyHighSchool, someCollege, bachelorsOrMore));
                 }
             }
         }
@@ -100,7 +100,7 @@ public class Utils {
             line = line.replace("%", "");
         }
 
-        while(line.contains("\"")) {
+        while (line.contains("\"")) {
             int index1 = line.indexOf("\"");
             int index2 = line.indexOf("\"", index1 + 1);
             String noMiddleCommas = line.substring(index1 + 1, index2).replace(",", "");
@@ -129,7 +129,7 @@ public class Utils {
             int total_votes = (int) Double.parseDouble(lineArr[3]);
 
             data.getStateByName(state_abbr).add(new County(county_name, combined_fips));
-            data.getStateByName(state_abbr).getCountyByName(county_name).add(new Election2016(votes_dem, votes_gop, total_votes));
+            data.getStateByName(state_abbr).getCountyByName(county_name).setVote2016(new Election2016(votes_dem, votes_gop, total_votes));
         }
     }
 

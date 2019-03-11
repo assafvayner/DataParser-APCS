@@ -19,20 +19,6 @@ public class County {
         this.fips = fips;
     }
 
-    public void add(Election2016 Obj){
-        this.vote2016 = Obj;
-    }
-
-
-    public void add(Education2016 Obj){
-        this.educ2016 = Obj;
-    }
-
-
-    public void add(Employment2016 Obj){
-        this.employ2016 = Obj;
-    }
-
     public String getName() {
         return name;
     }
