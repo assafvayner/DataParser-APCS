@@ -44,9 +44,9 @@ public class State {
         return null;
     }
 
-    public boolean contains(String countyName){
+    public boolean contains(int fips){
         for (int i = 0; i < this.counties.size(); i++) {
-            if (this.counties.get(i).getName().equals(countyName)){
+            if (this.counties.get(i).getFips() == fips){
                 return true;
             }
         }
