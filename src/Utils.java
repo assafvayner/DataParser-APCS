@@ -5,6 +5,11 @@ import java.util.Scanner;
 
 public class Utils {
 
+    final private static int highIncome = 600000;
+    final private static int lowIncome = 10000;
+    final private static double highUnemployment = 10;
+
+
     public static String readFileAsString(String filepath) {
         StringBuilder output = new StringBuilder();
 
@@ -44,21 +49,45 @@ public class Utils {
             auxStr = removeBadChars(unemploymentDataLines[i]);//make method
             lineArr = auxStr.split(",");
 
-            String state_abbr = lineArr[1];
+            String state_abbr = lineArr[1].trim();
 
             if (data.contains(state_abbr)) {
-                int FIPS = Integer.parseInt(lineArr[0]);
+                int FIPS = Integer.parseInt(lineArr[0].trim());
                 if(data.getStateByName(state_abbr).contains(FIPS)){
+                    double unemplymentRate = Double.parseDouble(lineArr[46].trim());
+                    Integer income = Integer.parseInt(lineArr[51].trim());
 
-                    //insert unemployment boolean value into counties
+                    County c = data.getStateByName(state_abbr).getCounyByFIPS(FIPS);
+
+                    c.setEmployment(chooseUnemploymentLevel(unemplymentRate));
+                    c.setIncomeLevel(chooseIncomeLevel(income));
                 }
             }
         }
     }
-    private static String removeBadChars(String line) {
-        if (line.contains("%")) {
-            line = line.replace("%", "");
+
+    private static String chooseUnemploymentLevel(double unemplymentRate) {
+        if(unemplymentRate >= highUnemployment){
+            return "HIGH";
+        }else{
+            return "LOW";
         }
+    }
+
+    private static String chooseIncomeLevel(Integer income) {
+        if(income < lowIncome){
+            return "LOW";
+        }else if(income > highIncome){
+            return "HIGH";
+        }else{
+            return "NORMAL";
+        }
+    }
+
+
+    private static String removeBadChars(String line) {
+        line = line.replace("%", "");
+        line = line.replace("$", "");
 
         while (line.contains("\"")) {
             int index1 = line.indexOf("\"");
@@ -76,17 +105,15 @@ public class Utils {
             auxStr = removeBadChars(electionDataLines[i]);
             lineArr = auxStr.split(",");
 
-            String state_abbr = lineArr[8];
+            String state_abbr = lineArr[8].trim();
 
-            if (!data.contains(state_abbr)) {
-                data.add(new State(state_abbr));
-            }
+            data.add(new State(state_abbr));
 
-            String county_name = lineArr[9];
-            int combined_fips = Integer.parseInt(lineArr[10]);
-            int total_votes = (int) Double.parseDouble(lineArr[3]);
-            int votes_dem = (int) Double.parseDouble(lineArr[1]);
-            int votes_gop = (int) Double.parseDouble(lineArr[2]);
+            String county_name = lineArr[9].trim();
+            int combined_fips = Integer.parseInt(lineArr[10].trim());
+            int total_votes = (int) Double.parseDouble(lineArr[3].trim());
+            int votes_dem = (int) Double.parseDouble(lineArr[1].trim());
+            int votes_gop = (int) Double.parseDouble(lineArr[2].trim());
 
             County c = new County(county_name, combined_fips);
             c.setPoliticalInfo(votes_dem,votes_gop,total_votes);

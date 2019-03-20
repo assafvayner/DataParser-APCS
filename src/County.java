@@ -2,8 +2,8 @@ public class County {
 
     private String name;
     private int fips;
-    private boolean employment; //high employment is True, high unemployment is False
-    private boolean incomeLevel; //high income level is True, low income level is False
+    private String employment; //high employment is True, high unemployment is False
+    private String incomeLevel; //high income level is True, low income level is False
     private double DEMvotesPercent;
     private double REPvotesPercent;
 
@@ -13,19 +13,19 @@ public class County {
         this.fips = fips;
     }
 
-    public boolean isEmployment() {
+    public String isEmployment() {
         return employment;
     }
 
-    public void setEmployment(boolean employment) {
+    public void setEmployment(String employment) {
         this.employment = employment;
     }
 
-    public boolean isIncomeLevel() {
+    public String isIncomeLevel() {
         return incomeLevel;
     }
 
-    public void setIncomeLevel(boolean incomeLevel) {
+    public void setIncomeLevel(String incomeLevel) {
         this.incomeLevel = incomeLevel;
     }
 

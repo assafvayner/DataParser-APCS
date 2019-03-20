@@ -52,4 +52,13 @@ public class State {
         }
         return false;
     }
+
+    public County getCounyByFIPS(int fips) {
+        for (County county : this.counties) {
+            if (county.getFips() == fips) {
+                return county;
+            }
+        }
+        return null;
+    }
 }
