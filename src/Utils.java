@@ -7,7 +7,7 @@ public class Utils {
 
     final private static int highIncome = 600000;
     final private static int lowIncome = 10000;
-    final private static double highUnemployment = 10;
+    final private static double highUnemployment = 6;
 
 
     public static String readFileAsString(String filepath) {
@@ -45,7 +45,7 @@ public class Utils {
     private static void InsertUnemploymentData(Data data, String[] unemploymentDataLines) {
         String auxStr;
         String[] lineArr;
-        for (int i = 5; i < unemploymentDataLines.length; i++) {
+        for (int i = 9; i < unemploymentDataLines.length; i++) {
             auxStr = removeBadChars(unemploymentDataLines[i]);//make method
             lineArr = auxStr.split(",");
 
@@ -54,8 +54,8 @@ public class Utils {
             if (data.contains(state_abbr)) {
                 int FIPS = Integer.parseInt(lineArr[0].trim());
                 if(data.getStateByName(state_abbr).contains(FIPS)){
-                    double unemplymentRate = Double.parseDouble(lineArr[46].trim());
-                    Integer income = Integer.parseInt(lineArr[51].trim());
+                    double unemplymentRate = Double.parseDouble(lineArr[45].trim());
+                    Integer income = Integer.parseInt(lineArr[50].trim());
 
                     County c = data.getStateByName(state_abbr).getCounyByFIPS(FIPS);
 
@@ -83,7 +83,6 @@ public class Utils {
             return "NORMAL";
         }
     }
-
 
     private static String removeBadChars(String line) {
         line = line.replace("%", "");
