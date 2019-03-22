@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class Utils {
 
-    final private static int highIncome = 600000;
-    final private static int lowIncome = 10000;
+    final private static int highIncome = 150000;
+    final private static int lowIncome = 60000;
     final private static double highUnemployment = 6;
 
     final private static double MAJORITY  = 0.5;
@@ -148,7 +148,7 @@ public class Utils {
                     "% Counties with LOW unemployment and HIGH income vote for Republicans");
         }
         else{
-            System.out.println(proportion*100 +
+            System.out.println((1-proportion)*100 +
                     "% Counties with LOW unemployment and HIGH income vote for Democrats");
         }
     }
@@ -172,7 +172,7 @@ public class Utils {
                     "% Counties with HIGH unemployment and LOW income vote for Democrats");
         }
         else{
-            System.out.println(proportion*100 +
+            System.out.println((1-proportion)*100 +
                     "% Counties with HIGH unemployment and LOW income vote for Republicans");
         }
     }
