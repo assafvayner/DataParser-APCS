@@ -61,4 +61,10 @@ public class State {
         }
         return null;
     }
+
+    public void print() {
+        for (County c : counties) {
+            System.out.println(c.toString());
+        }
+    }
 }

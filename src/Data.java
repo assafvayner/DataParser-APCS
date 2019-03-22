@@ -42,5 +42,10 @@ public class Data {
         return null;
     }
 
+    public void print(){
+        for (State s : states) {
+            s.print();
+        }
+    }
 
 }
