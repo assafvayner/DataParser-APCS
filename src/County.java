@@ -7,6 +7,10 @@ public class County {
     private double DEMvotesPercent;
     private double REPvotesPercent;
 
+    public boolean hasUnemploymentInfo(){
+        return Unemployment != null && incomeLevel != null;
+    }
+
     public String getUnemployment() {
         return Unemployment;
     }

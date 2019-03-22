@@ -6,6 +6,7 @@ public class Main {
 
         Data data = Utils.parseAllData();
 
+        Utils.getResults(data);
         //data.print();
 
     }
