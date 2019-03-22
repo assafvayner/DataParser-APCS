@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Utils {
 
-    final private static int highIncome = 150000;
+    final private static int highIncome = 90000;
     final private static int lowIncome = 60000;
     final private static double highUnemployment = 6;
 
