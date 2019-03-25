@@ -6,9 +6,9 @@ public class Main {
 
         Data data = Utils.parseAllData();
 
-        Utils.getResults(data);
-        //data.print();
+        String str = Utils.stringifyTheData(data);
 
+        Utils.writeDataToFile("data.csv", str);
     }
 
 }

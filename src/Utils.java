@@ -1,6 +1,7 @@
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Utils {
@@ -8,7 +9,6 @@ public class Utils {
     final private static int highIncome = 90000;
     final private static int lowIncome = 60000;
     final private static double highUnemployment = 6;
-
     final private static double MAJORITY = 0.5;
 
 
@@ -173,6 +173,41 @@ public class Utils {
             System.out.println((1 - proportion) * 100 +
                     "% Counties with HIGH unemployment and LOW income vote for Republicans");
         }
+    }
+
+    public static String stringifyTheData(Data data){
+        StringBuilder str = new StringBuilder("county name,unemployment,incomeLevel,votes Dem percent, votes Rep percent" + "\n");
+        for (State s : data.getStates()) {
+            for (County c : s.getCounties()) {
+                if (hasAllVals(c)){
+                    String line = c.getName() + "," + c.getUnemployment() + "," + c.getIncomeLevel()
+                            + "," + c.getDEMvotesPercent() + "," + c.getREPvotesPercent() + "\n";
+                    str.append(line);
+                }
+            }
+        }
+        return str.toString();
+    }
+
+    public static void writeDataToFile(String filePath, String dataStr){
+        File outFile = new File(filePath);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))){
+            writer.write(dataStr);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean hasAllVals(County c) {
+        if(c.getIncomeLevel() != null){
+            if(c.getUnemployment() != null){
+                if(c.getREPvotesPercent() != 0 && c.getDEMvotesPercent() != 0){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
