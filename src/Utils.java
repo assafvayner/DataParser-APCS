@@ -176,11 +176,11 @@ public class Utils {
     }
 
     public static String stringifyTheData(Data data){
-        StringBuilder str = new StringBuilder("county name,unemployment,incomeLevel,votes Dem percent, votes Rep percent" + "\n");
+        StringBuilder str = new StringBuilder("state,FIPS,unemployment,incomeLevel,votes Dem percent, votes Rep percent" + "\n");
         for (State s : data.getStates()) {
             for (County c : s.getCounties()) {
                 if (hasAllVals(c)){
-                    String line = c.getName() + "," + c.getUnemployment() + "," + c.getIncomeLevel()
+                    String line = s.getName() + "," + c.getFips() + "," + c.getUnemployment() + "," + c.getIncomeLevel()
                             + "," + c.getDEMvotesPercent() + "," + c.getREPvotesPercent() + "\n";
                     str.append(line);
                 }
