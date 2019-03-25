@@ -76,7 +76,7 @@ public class Utils {
         }
     }
 
-    private static String chooseIncomeLevel(Integer income) {
+    private static String chooseIncomeLevel(int income) {
         if (income < lowIncome) {
             return "LOW";
         } else if (income > highIncome) {
@@ -122,67 +122,12 @@ public class Utils {
         }
     }
 
-    public static void getResults(Data data) {
-        highUnemploymentLowIncome(data);
-        LowUnemploymentHighIncome(data);
-    }
-
-    private static void LowUnemploymentHighIncome(Data data) {
-        int numLUHI = 0;
-        int numLUHIvoteREP = 0;
-        for (State s : data.getStates()) {
-            for (County c : s.getCounties()) {
-                if (c.hasUnemploymentInfo()) {
-                    if (c.getIncomeLevel().equals("HIGH") && c.getUnemployment().equals("LOW")) {
-                        numLUHI++;
-                        if (c.getDEMvotesPercent() < c.getREPvotesPercent()) {
-                            numLUHIvoteREP++;
-                        }
-                    }
-                }
-            }
-        }
-        double proportion = ((double) numLUHIvoteREP) / numLUHI;
-        if (proportion > MAJORITY) {
-            System.out.println(proportion * 100 +
-                    "% Counties with LOW unemployment and HIGH income vote for Republicans");
-        } else {
-            System.out.println((1 - proportion) * 100 +
-                    "% Counties with LOW unemployment and HIGH income vote for Democrats");
-        }
-    }
-
-    private static void highUnemploymentLowIncome(Data data) {
-        int numHULI = 0;
-        int numHULIvoteDEM = 0;
-        for (State s : data.getStates()) {
-            for (County c : s.getCounties()) {
-                if (c.hasUnemploymentInfo()) {
-                    if (c.getIncomeLevel().equals("LOW") && c.getUnemployment().equals("HIGH")) {
-                        numHULI++;
-                        if (c.getDEMvotesPercent() > c.getREPvotesPercent()) numHULIvoteDEM++;
-                    }
-                }
-            }
-        }
-        double proportion = ((double) numHULIvoteDEM) / numHULI;
-        if (proportion > MAJORITY) {
-            System.out.println(proportion * 100 +
-                    "% Counties with HIGH unemployment and LOW income vote for Democrats");
-        } else {
-            System.out.println((1 - proportion) * 100 +
-                    "% Counties with HIGH unemployment and LOW income vote for Republicans");
-        }
-    }
-
     public static String stringifyTheData(Data data){
         StringBuilder str = new StringBuilder("state,FIPS,unemployment,incomeLevel,votes Dem percent, votes Rep percent" + "\n");
         for (State s : data.getStates()) {
             for (County c : s.getCounties()) {
                 if (hasAllVals(c)){
-                    String line = s.getName() + "," + c.getFips() + "," + c.getUnemployment() + "," + c.getIncomeLevel()
-                            + "," + c.getDEMvotesPercent() + "," + c.getREPvotesPercent() + "\n";
-                    str.append(line);
+                    str.append(s.getName()).append(",").append(c.toString());
                 }
             }
         }

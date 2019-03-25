@@ -7,10 +7,6 @@ public class County {
     private double DEMvotesPercent;
     private double REPvotesPercent;
 
-    public boolean hasUnemploymentInfo(){
-        return Unemployment != null && incomeLevel != null;
-    }
-
     public String getUnemployment() {
         return Unemployment;
     }
@@ -73,13 +69,8 @@ public class County {
 
     @Override
     public String toString() {
-        return "County{" +
-                "name='" + name + '\'' +
-                ", fips=" + fips +
-                ", Unemployment='" + Unemployment + '\'' +
-                ", incomeLevel='" + incomeLevel + '\'' +
-                ", DEMvotesPercent=" + DEMvotesPercent +
-                ", REPvotesPercent=" + REPvotesPercent +
-                '}';
+        String line = this.getFips() + "," + this.getUnemployment() + "," + this.getIncomeLevel()
+                + "," + this.getDEMvotesPercent() + "," + this.getREPvotesPercent() + "\n";
+        return line;
     }
 }
