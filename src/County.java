@@ -2,10 +2,33 @@ public class County {
 
     private String name;
     private int fips;
-    private String Unemployment; //high employment is True, high unemployment is False
-    private String incomeLevel; //high income level is True, low income level is False
+    private String Unemployment;
+    private String incomeLevel;
     private double DEMvotesPercent;
     private double REPvotesPercent;
+    private double latitude;
+
+    public void setUnemployment(String unemployment) {
+        Unemployment = unemployment;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    private double longitude;
 
     public String getUnemployment() {
         return Unemployment;
@@ -19,11 +42,6 @@ public class County {
         this.name = name;
         this.fips = fips;
     }
-
-    public void setEmployment(String Unemployment) {
-        this.Unemployment = Unemployment;
-    }
-
 
     public void setIncomeLevel(String incomeLevel) {
         this.incomeLevel = incomeLevel;
@@ -69,8 +87,12 @@ public class County {
 
     @Override
     public String toString() {
-        String line = this.getFips() + "," + this.getUnemployment() + "," + this.getIncomeLevel()
-                + "," + this.getDEMvotesPercent() + "," + this.getREPvotesPercent() + "\n";
-        return line;
+        return fips + "," + Unemployment + "," + incomeLevel + "," + DEMvotesPercent + ","
+                + REPvotesPercent + "," + latitude + "," + longitude+ "\n";
+    }
+
+    public void setLocationData(double lat, double lon) {
+        setLatitude(lat);
+        setLongitude(lon);
     }
 }

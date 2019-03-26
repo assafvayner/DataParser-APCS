@@ -64,7 +64,7 @@ public class State {
 
     public void print() {
         for (County c : counties) {
-            System.out.println(c.toString());
+            System.out.print(c.toString());
         }
     }
 }

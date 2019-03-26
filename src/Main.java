@@ -4,9 +4,7 @@ public class Main {
 
         Data data = Utils.parseAllData();
 
-        String str = Utils.stringifyTheData(data);
-
-        Utils.writeDataToFile("data.csv", str);
+        Utils.saveData(data, "data.csv");
     }
 
 }

@@ -9,7 +9,6 @@ public class Utils {
     final private static int highIncome = 90000;
     final private static int lowIncome = 60000;
     final private static double highUnemployment = 6;
-    final private static double MAJORITY = 0.5;
 
 
     public static String readFileAsString(String filepath) {
@@ -41,7 +40,38 @@ public class Utils {
 
         InsertUnemploymentData(data, unemploymentDataLines);
 
+        String locationData = readFileAsString("data/location.csv");
+        String[] locationDataLines = locationData.split("\n");
+
+        InsertLocationData(data, locationDataLines);
+
         return data;
+    }
+
+    private static void InsertLocationData(Data data, String[] locationDataLines) {
+        for (int i = 1; i < locationDataLines.length;i++) {
+            String clean = removeBadChars(locationDataLines[i]);
+            String[] line = clean.split(",");
+
+            String state_abbr = line[2];
+            int FIPS = Integer.parseInt(line[4]);
+
+            for (State s : data.getStates()) {
+                if(state_abbr.equals(s.getName())){
+                    for (County c : s.getCounties()) {
+                        if(c.getFips() == FIPS){
+                            double lat = Double.parseDouble(line[6]);
+                            double lon = Double.parseDouble(line[7]);
+                            c.setLocationData(lat, lon);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+        }
+
     }
 
     private static void InsertUnemploymentData(Data data, String[] unemploymentDataLines) {
@@ -56,20 +86,20 @@ public class Utils {
             if (data.contains(state_abbr)) {
                 int FIPS = Integer.parseInt(lineArr[0].trim());
                 if (data.getStateByName(state_abbr).contains(FIPS)) {
-                    double unemplymentRate = Double.parseDouble(lineArr[45].trim());
+                    double unemployment = Double.parseDouble(lineArr[45].trim());
                     Integer income = Integer.parseInt(lineArr[50].trim());
 
                     County c = data.getStateByName(state_abbr).getCounyByFIPS(FIPS);
 
-                    c.setEmployment(chooseUnemploymentLevel(unemplymentRate));
+                    c.setUnemployment(chooseUnemploymentLevel(unemployment));
                     c.setIncomeLevel(chooseIncomeLevel(income));
                 }
             }
         }
     }
 
-    private static String chooseUnemploymentLevel(double unemplymentRate) {
-        if (unemplymentRate >= highUnemployment) {
+    private static String chooseUnemploymentLevel(double unemploymentRate) {
+        if (unemploymentRate >= highUnemployment) {
             return "HIGH";
         } else {
             return "LOW";
@@ -123,7 +153,7 @@ public class Utils {
     }
 
     public static String stringifyTheData(Data data){
-        StringBuilder str = new StringBuilder("state,FIPS,unemployment,incomeLevel,votes Dem percent, votes Rep percent" + "\n");
+        StringBuilder str = new StringBuilder("state,FIPS,unemployment,incomeLevel,votes Dem percent, votes Rep percent,latitude,longitude" + "\n");
         for (State s : data.getStates()) {
             for (County c : s.getCounties()) {
                 if (hasAllVals(c)){
@@ -153,6 +183,10 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static void saveData(Data data, String filepath){
+        writeDataToFile(filepath, stringifyTheData(data));
     }
 
 }
