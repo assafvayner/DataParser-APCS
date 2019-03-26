@@ -186,7 +186,18 @@ public class Utils {
     }
 
     public static void saveData(Data data, String filepath){
-        writeDataToFile(filepath, stringifyTheData(data));
+        String s = stringifyTheData(data);
+        String[] lines = s.split("\n");
+        StringBuilder setOfLines = new StringBuilder();
+        for (int i = 0; i < lines.length; i++) {
+            setOfLines.append(lines[i]).append("\n");
+            if(i % 998 == 0){
+                writeDataToFile("data" + i + ".csv", setOfLines.toString());
+                setOfLines.delete(0, setOfLines.length() - 1);
+            }
+        }
+
+
     }
 
 }
