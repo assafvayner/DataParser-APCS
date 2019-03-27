@@ -36,24 +36,24 @@ public class State {
     }
 
     public County getCountyByName(String county_name) {
-        for (int i = 0; i < this.counties.size(); i++) {
-            if(this.counties.get(i).getName().equals(county_name)){
-                return this.counties.get(i);
+        for (County county : this.counties) {
+            if (county.getName().equals(county_name)) {
+                return county;
             }
         }
         return null;
     }
 
     public boolean contains(int fips){
-        for (int i = 0; i < this.counties.size(); i++) {
-            if (this.counties.get(i).getFips() == fips){
+        for (County county : this.counties) {
+            if (county.getFips() == fips) {
                 return true;
             }
         }
         return false;
     }
 
-    public County getCounyByFIPS(int fips) {
+    public County getCountyByFIPS(int fips) {
         for (County county : this.counties) {
             if (county.getFips() == fips) {
                 return county;

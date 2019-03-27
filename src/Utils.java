@@ -18,7 +18,7 @@ public class Utils {
 
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
-                output.append(line + "\n");
+                output.append(line).append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class Utils {
     }
 
     private static void InsertLocationData(Data data, String[] locationDataLines) {
-        for (int i = 1; i < locationDataLines.length;i++) {
+        for (int i = 1; i < locationDataLines.length; i++) {
             String clean = removeBadChars(locationDataLines[i]);
             String[] line = clean.split(",");
 
@@ -57,9 +57,9 @@ public class Utils {
             int FIPS = Integer.parseInt(line[4]);
 
             for (State s : data.getStates()) {
-                if(state_abbr.equals(s.getName())){
+                if (state_abbr.equals(s.getName())) {
                     for (County c : s.getCounties()) {
-                        if(c.getFips() == FIPS){
+                        if (c.getFips() == FIPS) {
                             double lat = Double.parseDouble(line[6]);
                             double lon = Double.parseDouble(line[7]);
                             c.setLocationData(lat, lon);
@@ -89,7 +89,7 @@ public class Utils {
                     double unemployment = Double.parseDouble(lineArr[45].trim());
                     Integer income = Integer.parseInt(lineArr[50].trim());
 
-                    County c = data.getStateByName(state_abbr).getCounyByFIPS(FIPS);
+                    County c = data.getStateByName(state_abbr).getCountyByFIPS(FIPS);
 
                     c.setUnemployment(chooseUnemploymentLevel(unemployment));
                     c.setIncomeLevel(chooseIncomeLevel(income));
@@ -152,11 +152,11 @@ public class Utils {
         }
     }
 
-    public static String stringifyTheData(Data data){
+    public static String stringifyTheData(Data data) {
         StringBuilder str = new StringBuilder("state,FIPS,unemployment,incomeLevel,votes Dem percent, votes Rep percent,latitude,longitude" + "\n");
         for (State s : data.getStates()) {
             for (County c : s.getCounties()) {
-                if (hasAllVals(c)){
+                if (hasAllVals(c)) {
                     str.append(s.getName()).append(",").append(c.toString());
                 }
             }
@@ -164,40 +164,25 @@ public class Utils {
         return str.toString();
     }
 
-    public static void writeDataToFile(String filePath, String dataStr){
+    public static void writeDataToFile(String filePath, String dataStr) {
         File outFile = new File(filePath);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
             writer.write(dataStr);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private static boolean hasAllVals(County c) {
-        if(c.getIncomeLevel() != null){
-            if(c.getUnemployment() != null){
-                if(c.getREPvotesPercent() != 0 && c.getDEMvotesPercent() != 0){
-                    return true;
-                }
-            }
-        }
-        return false;
+        return c.getIncomeLevel() != null &&
+                c.getUnemployment() != null &&
+                c.getREPvotesPercent() != 0 &&
+                c.getDEMvotesPercent() != 0;
     }
 
-    public static void saveData(Data data, String filepath){
-        String s = stringifyTheData(data);
-        String[] lines = s.split("\n");
-        StringBuilder setOfLines = new StringBuilder();
-        for (int i = 0; i < lines.length; i++) {
-            setOfLines.append(lines[i]).append("\n");
-            if(i % 998 == 0){
-                writeDataToFile("data" + i + ".csv", setOfLines.toString());
-                setOfLines.delete(0, setOfLines.length() - 1);
-            }
-        }
-
-
+    public static void saveData(Data data, String filepath) {
+        writeDataToFile(filepath, stringifyTheData(data));
     }
 
 }

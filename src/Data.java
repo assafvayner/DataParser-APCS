@@ -9,8 +9,8 @@ public class Data {
     }
 
     public boolean contains(String stateName){
-        for (int i = 0; i < this.states.size(); i++) {
-            if (this.states.get(i).getName().equals(stateName)){
+        for (State state : this.states) {
+            if (state.getName().equals(stateName)) {
                 return true;
             }
         }
@@ -34,9 +34,9 @@ public class Data {
     }
 
     public State getStateByName(String name){
-        for (int i = 0; i < this.states.size(); i++) {
-            if (this.states.get(i).getName().equals(name)){
-                return this.states.get(i);
+        for (State state : this.states) {
+            if (state.getName().equals(name)) {
+                return state;
             }
         }
         return null;
